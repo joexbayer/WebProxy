@@ -11,6 +11,9 @@
         "proxy",
         "storage"
     ],
+    "host_permissions": [
+      "https://www.google.com/"
+    ],
     "action": {
       "default_popup": "popup.html"
     }

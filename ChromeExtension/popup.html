@@ -1,13 +1,19 @@
 <!DOCTYPE html>
-<html>
+<html style="height: 360px; border: solid 4px black;background-size: auto;background-image: url(images/1892783.webp);">
   <head>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery.terminal/2.30.1/css/jquery.terminal.min.css" rel="stylesheet"/>
   </head>
-  <body style="width: 500px; height: 300px; background-color: black;">
-    
-    <button id="onProxy">On</button>
-    <button id="offProxy">Off</button>
-
+  <body>
+    <div style="color:white;">
+      <img style="padding: 5px;float: left;" id="power" width="24" height="24" src="images/power-on.png">
+      <b><h3 style="text-align: center;float: left;padding: 0px;margin: 0px;padding-top: 8px;">Standard Web Forward Proxy</h3></b>
+      <a target="_blank" href="https://github.com/joexbayer/WebProxy">
+        <img width="24" style="padding: 5px; float:right;filter: invert(100%);" height="24" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Octicons-mark-github.svg/900px-Octicons-mark-github.svg.png">
+      </a>
+  </div>
+    <div style="width: 500px; height: 300px;border: solid white 2px; background-color: black;opacity: 0.7;" id="terminal">
+    </div>
+    <span  style="text-align: center;float: left;" id="ip">127.0.0.1</span>
     <script type="text/javascript" src="jquery.js"></script>
     <script type="text/javascript" src="jquery.terminal.js"></script>
     <script type="text/javascript" src="proxy.js"></script>
