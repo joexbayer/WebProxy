@@ -119,11 +119,11 @@ jQuery(document).ready(async function($, undefined) {
     }
 
   
-    $.fn.updateIp = function(ip) {
-      chrome.storage.local.set({"proxy_ip": ip}, function() {
-        console.log('Value is set to ' + ip);
-        ip = ip;
-        document.getElementById("ip").innerHTML = ip;
+    $.fn.updateIp = function(ip2) {
+      chrome.storage.local.set({"proxy_ip": ip2}, function() {
+        console.log('Value is set to ' + ip2);
+        ip = ip2;
+        document.getElementById("ip").innerHTML = ip2;
       });
     }
 

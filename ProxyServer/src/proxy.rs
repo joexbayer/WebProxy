@@ -173,7 +173,7 @@ impl ProxyConnection {
 
                /* Parse CONNECT <domain:port> ... */
                let string = std::str::from_utf8(&mut buffer[0..usize]).unwrap();
-               let string_split: Vec<&str> = string.split(" ").collect();
+               let mut string_split: Vec<&str> = string.split(" ").collect();
 
                /* Send OK response */
                let response = "HTTP/1.1 200 OK\r\n\r\n";
@@ -187,12 +187,22 @@ impl ProxyConnection {
         };
 
        /* Connect to the given domain */
-        let stream2: TcpStream = match TcpStream::connect(connect) {
-            Ok(stream) => {
-                stream
-            },
-            Err(e) => {println!("[error connect] {}", e);return;}
-        };
+       let stream2: TcpStream;
+        if !connect.contains(":443") { 
+            stream2 = match TcpStream::connect(format!("{}:{}", connect, "80")) {
+                Ok(stream) => {
+                    stream
+                },
+                Err(e) => {println!("[error connect] {}", e);return;}
+            };
+        } else {
+            stream2 = match TcpStream::connect(connect) {
+                Ok(stream) => {
+                    stream
+                },
+                Err(e) => {println!("[error connect] {}", e);return;}
+            };
+        }
 
         println!("Connection request from {} too {}", self.ipaddr, connect);
 
