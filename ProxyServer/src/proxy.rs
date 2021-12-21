@@ -215,7 +215,10 @@ impl ProxyConnection {
         s1.set_nonblocking(true).unwrap();
         s2.set_nonblocking(true).unwrap();
         let tunnel = ProxyConnectionTunnel::new(s1, s2);
-        self.tunnels.lock().unwrap().push(tunnel);
+        match self.tunnels.lock(){
+            Ok(mut e) => e.push(tunnel),
+            Err(_) => {}
+        }
     }
 
     /// Main loop for connection (runs in thread.)
@@ -301,7 +304,10 @@ impl ProxyConnectionTunnel {
                     self.alive = false;
                     return;
                 }
-                let res_usize = self.stream_endpoint.write(&buffer[0..usize]).unwrap();
+                let res_usize = match self.stream_endpoint.write(&buffer[0..usize]) {
+                    Ok(size) => size,
+                    Err(_) => {0}
+                };
                 self.stream_endpoint.flush().unwrap();
                 if res_usize != usize {
                     println!("[warning] Sent size is different from received size!");
@@ -320,7 +326,10 @@ impl ProxyConnectionTunnel {
                     self.alive = false;
                     return;
                 }
-                let _res_usize = self.stream_client.write(&buffer[0..usize]).unwrap();
+                let _res_usize = match self.stream_client.write(&buffer[0..usize]){
+                    Ok(size) => size,
+                    Err(_) => {0}
+                };
                 self.stream_client.flush().unwrap();
 
                 self.timer = time::Instant::now();
