@@ -164,6 +164,7 @@ impl ProxyConnection {
     fn connect(&self, mut stream: TcpStream){
         /* Parse connection HTTP request */
         let mut buffer = [0 as u8; 2000];
+        let mut size_buff: usize = 0;
         let connect: &str = match stream.read(&mut buffer){
            Ok(usize) => {
                if usize == 0 {
@@ -171,8 +172,10 @@ impl ProxyConnection {
                    return;
                }
 
+               size_buff = usize;
+
                /* Parse CONNECT <domain:port> ... */
-               let string = std::str::from_utf8(&mut buffer[0..usize]).unwrap();
+               let string = std::str::from_utf8(&buffer[0..usize]).unwrap();
                let mut string_split: Vec<&str> = string.split(" ").collect();
 
                /* Send OK response */
@@ -192,7 +195,8 @@ impl ProxyConnection {
             let domain: Vec<&str> = connect.split("/").collect();
             println!("{}", format!("{}:{}", domain[2], "80"));
             stream2 = match TcpStream::connect(format!("{}:{}", domain[2], "80")) {
-                Ok(stream) => {
+                Ok(mut stream) => {
+                    stream.write(&buffer[0..size_buff]).unwrap();
                     stream
                 },
                 Err(e) => {println!("[error connect] {}", e);return;}
