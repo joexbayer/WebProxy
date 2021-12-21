@@ -171,17 +171,18 @@ impl ProxyConnection {
                    println!("[error read] Client sent empty connection request.");
                    return;
                }
-
                size_buff = usize;
 
                /* Parse CONNECT <domain:port> ... */
                let string = std::str::from_utf8(&buffer[0..usize]).unwrap();
                let string_split: Vec<&str> = string.split(" ").collect();
 
-               /* Send OK response */
-               let response = "HTTP/1.1 200 OK\r\n\r\n";
-               stream.write(response.as_bytes()).unwrap();
-               stream.flush().unwrap();
+               if string_split[1].contains(":443") {
+                    /* Send OK response */
+                    let response = "HTTP/1.1 200 OK\r\n\r\n";
+                    stream.write(response.as_bytes()).unwrap();
+                    stream.flush().unwrap();
+               }
 
                /* Return response */
                string_split[1]
@@ -193,7 +194,6 @@ impl ProxyConnection {
        let stream2: TcpStream;
         if !connect.contains(":443") { 
             let domain: Vec<&str> = connect.split("/").collect();
-            println!("{}", format!("{}:{}", domain[2], "80"));
             stream2 = match TcpStream::connect(format!("{}:{}", domain[2], "80")) {
                 Ok(mut stream) => {
                     stream.write(&buffer[0..size_buff]).unwrap();
