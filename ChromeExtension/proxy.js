@@ -1,6 +1,6 @@
 let toggle;
 let ip;
-let time;
+let time = new Date();
 
 var loader = '[[@;;;loader;https://upload.wikimedia.org/wikipedia/commons/1/14/Loading2.gif]Loader Animation]';
 
@@ -30,6 +30,7 @@ jQuery(document).ready(async function($, undefined) {
               time = new Date();
             },
             error : function(e){
+              console.log(e);
               $.fn.stop_proxy();
               term.echo("Connection failed.");
             }
@@ -86,6 +87,7 @@ jQuery(document).ready(async function($, undefined) {
             bypassList: ["*"]
           }
       };
+      toggle = !toggle;
       chrome.storage.local.set({"state": false}, function() {});
       chrome.proxy.settings.set(
         {value: config, scope: 'regular'},
@@ -104,6 +106,7 @@ jQuery(document).ready(async function($, undefined) {
             bypassList: [""]
           }
       };
+      toggle = !toggle;
       chrome.storage.local.set({"state": true}, function() {});
       chrome.proxy.settings.set(
         {value: config, scope: 'regular'},
@@ -134,6 +137,18 @@ jQuery(document).ready(async function($, undefined) {
           document.getElementById("power").src = "/images/power.png";
         } else {
           document.getElementById("power").src = "/images/power-on.png";
+        }
+      });
+
+      var xhr = $.ajax({
+        url: "https://www.google.com/",
+        timeout: 3000,
+        success : function(data){
+        },
+        error : function(e){
+          console.log(e);
+          $.fn.stop_proxy();
+          term.echo("Proxy got disconnected.");
         }
       });
     }
