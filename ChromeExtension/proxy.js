@@ -22,11 +22,15 @@ jQuery(document).ready(async function($, undefined) {
           let res = $.fn.start_proxy();
           this.echo("Connecting to proxy...");
           var xhr = $.ajax({
-            url: "https://www.google.com/",
+            url: "http://ip-api.com/json/"+ip,
             timeout: 3000,
             success : function(data){
+              
               document.getElementById("power").src = "/images/power.png";
-              term.echo("Connected");
+              term.echo("Connected to "+data["country"]);
+              term.echo("Region: "+data["region"]);
+              term.echo("City: "+data["city"]);
+              term.echo("ISP: "+data["isp"]);
               time = new Date();
             },
             error : function(e){

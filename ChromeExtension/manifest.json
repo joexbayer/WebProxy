@@ -12,7 +12,8 @@
         "storage"
     ],
     "host_permissions": [
-      "https://www.google.com/"
+      "https://www.google.com/",
+      "http://ip-api.com/*"
     ],
     "action": {
       "default_popup": "popup.html"
