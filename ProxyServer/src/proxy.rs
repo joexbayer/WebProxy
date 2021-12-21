@@ -176,7 +176,7 @@ impl ProxyConnection {
 
                /* Parse CONNECT <domain:port> ... */
                let string = std::str::from_utf8(&buffer[0..usize]).unwrap();
-               let mut string_split: Vec<&str> = string.split(" ").collect();
+               let string_split: Vec<&str> = string.split(" ").collect();
 
                /* Send OK response */
                let response = "HTTP/1.1 200 OK\r\n\r\n";

@@ -13,7 +13,7 @@
     ],
     "host_permissions": [
       "https://www.google.com/",
-      "http://ip-api.com/*"
+      "https://ipapi.co*"
     ],
     "action": {
       "default_popup": "popup.html"
