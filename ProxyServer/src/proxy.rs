@@ -189,6 +189,7 @@ impl ProxyConnection {
        /* Connect to the given domain */
        let stream2: TcpStream;
         if !connect.contains(":443") { 
+            println!("{}", format!("{}:{}", connect, "80"));
             stream2 = match TcpStream::connect(format!("{}:{}", connect, "80")) {
                 Ok(stream) => {
                     stream
