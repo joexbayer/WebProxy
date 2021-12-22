@@ -100,6 +100,7 @@ impl ProxyServer {
     /// proxyserver.run();
     /// ```
     pub fn run(&mut self) {
+        println!("Proxy server running on {}", self.server_socket.local_addr().unwrap());
         loop {
             match self.server_socket.accept() {
                 Ok((stream, addr)) => {
@@ -256,7 +257,7 @@ impl ProxyConnection {
     fn run(&self) { 
         loop {
             let mut connections =  self.tunnels.lock().unwrap();
-
+            // TODO() Add alive with timer
             for i in (0..connections.len()).rev() {
                 if connections[i].alive {
                     connections[i].run();
