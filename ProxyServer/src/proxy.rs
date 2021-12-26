@@ -355,7 +355,7 @@ impl ProxyConnectionTunnel {
             },
             Err(_) => {/*println!("[error endpoint] {}", e)*/}
         }
-        if self.timer.elapsed().as_secs() > 2 {
+        if self.timer.elapsed().as_secs() > 5 {
             self.alive = false;
         }
     }
