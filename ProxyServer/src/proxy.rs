@@ -162,16 +162,17 @@ impl ProxyConnection {
     /// connection.connect(stream);
     /// ```
     fn connect(&self, mut stream: TcpStream){
-        /* Parse connection HTTP request */
         let mut buffer = [0 as u8; 2000];
-        let mut size_buff: usize = 0;
-        let connect: &str = match stream.read(&mut buffer){
+
+
+        // Parse connection HTTP request
+        // returns connection string and size of message
+        let (connect, size_buff) = match stream.read(&mut buffer){
            Ok(usize) => {
                if usize == 0 {
                    println!("[error read] Client sent empty connection request.");
                    return;
                }
-               size_buff = usize;
 
                /* Parse CONNECT <domain:port> ... */
                let string = std::str::from_utf8(&buffer[0..usize]).unwrap();
@@ -185,14 +186,15 @@ impl ProxyConnection {
                }
 
                /* Return response */
-               string_split[1]
+               (string_split[1], usize)
            },
-           Err(e) => {println!("[error parse] {}", e); ""}
+           Err(e) => {println!("[error parse] {}", e); ("", 0)}
         };
 
-       /* Connect to the given domain */
-       let stream2: TcpStream;
-        if !connect.contains(":443") { 
+        /* Connect to the given domain */
+        let stream2: TcpStream;
+        if !connect.contains(":443") {
+            // HTTP
             let domain: Vec<&str> = connect.split("/").collect();
             stream2 = match TcpStream::connect(format!("{}:{}", domain[2], "80")) {
                 Ok(mut stream) => {
@@ -202,6 +204,7 @@ impl ProxyConnection {
                 Err(e) => {println!("[error connect] {}", e);return;}
             };
         } else {
+            // HTTPS
             stream2 = match TcpStream::connect(connect) {
                 Ok(stream) => {
                     stream
