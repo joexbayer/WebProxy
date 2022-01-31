@@ -1,8 +1,11 @@
 # WebProxy
 ## A Standard Web Forward Proxy
+**Uses HTTP scheme which means domain name is not encrypted!**
 # Extension
 Connecting to the proxy is done by using the provided Chrome Extensions.
 ## Google Chrome Extension
+Inside ChromeExtension/
+
 Load the extension in your chrome browser.
 After that you can click the icon and configure the proxy.
 

@@ -100,6 +100,7 @@ impl ProxyServer {
     /// proxyserver.run();
     /// ```
     pub fn run(&mut self) {
+        println!("Proxy server running on {}", self.server_socket.local_addr().unwrap());
         loop {
             match self.server_socket.accept() {
                 Ok((stream, addr)) => {
@@ -178,13 +179,6 @@ impl ProxyConnection {
                let string = std::str::from_utf8(&buffer[0..usize]).unwrap();
                let string_split: Vec<&str> = string.split(" ").collect();
 
-               if string_split[1].contains(":443") {
-                    /* Send OK response */
-                    let response = "HTTP/1.1 200 OK\r\n\r\n";
-                    stream.write(response.as_bytes()).unwrap();
-                    stream.flush().unwrap();
-               }
-
                /* Return response */
                (string_split[1], usize)
            },
@@ -211,6 +205,10 @@ impl ProxyConnection {
                 },
                 Err(e) => {println!("[error connect] {}", e);return;}
             };
+            /* Send OK response */
+            let response = "HTTP/1.1 200 OK\r\n\r\n";
+            stream.write(response.as_bytes()).unwrap();
+            stream.flush().unwrap();
         }
 
         println!("Connection request from {} too {}", self.ipaddr, connect);
@@ -256,13 +254,18 @@ impl ProxyConnection {
     /// });
     /// 
     /// ```
-    fn run(&self) { 
+    fn run(&self) {
+        //let mut timer = time::Instant::now();
         loop {
+            // if timer.elapsed().as_secs() > 3 {
+            //     //TODO;
+            // }
             let mut connections =  self.tunnels.lock().unwrap();
-
+            // TODO() Add alive with timer
             for i in (0..connections.len()).rev() {
                 if connections[i].alive {
                     connections[i].run();
+                    // timer = time::Instant::now();
                 } else {
                     println!("Closed a connection for {}", self.ipaddr);
                     connections.remove(i);
@@ -355,7 +358,7 @@ impl ProxyConnectionTunnel {
             },
             Err(_) => {/*println!("[error endpoint] {}", e)*/}
         }
-        if self.timer.elapsed().as_secs() > 2 {
+        if self.timer.elapsed().as_secs() > 5 {
             self.alive = false;
         }
     }
